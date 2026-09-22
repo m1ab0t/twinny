@@ -24,7 +24,19 @@
     "autocomplete",
     "intellisense",
     "llama-ai",
-    "vscode-extension"
+    "vscode-extension",
+    "self-hosted",
+    "local-llm",
+    "offline",
+    "on-premise",
+    "air-gapped",
+    "llama.cpp",
+    "lm-studio",
+    "openai-compatible",
+    "code-review",
+    "inline-edit",
+    "team",
+    "gateway"
   ],
   "repository": {
     "url": "https://github.com/twinnydotdev/twinny"
@@ -38,16 +50,11 @@
     "url": "https://github.com/twinnydotdev/twinny/issues"
   },
   "categories": [
+    "AI",
+    "Chat",
     "Programming Languages",
-    "Snippets",
-    "Debuggers",
-    "Formatters",
     "Machine Learning",
-    "Education",
-    "Testing",
-    "Data Science",
-    "Extension Packs",
-    "Linters"
+    "Snippets"
   ],
   "activationEvents": [
     "onStartupFinished",
