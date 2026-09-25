@@ -14,6 +14,7 @@
  *
  * Pure: no vscode, shared by the extension and the gateway.
  */
+import { messageOf } from "../common/errors"
 import { isRecord } from "../common/guards"
 import { InferenceError } from "../extension/inference/errors"
 import type {
@@ -395,7 +396,7 @@ export const parseGatewayFrame = (text: string): GatewayToPeerFrame => {
         request = parseRequest(frame.capability, frame.request)
       } catch (error) {
         throw new PeerProtocolError(
-          error instanceof Error ? error.message : String(error)
+          messageOf(error)
         )
       }
       return { type: "job", id, capability: frame.capability, request }

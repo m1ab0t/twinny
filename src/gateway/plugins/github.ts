@@ -20,6 +20,7 @@
 import { createSign } from "node:crypto"
 
 import { noAnswer, timeoutSignal } from "../../common/deadline"
+import { messageOf } from "../../common/errors"
 
 import {
   GatewayPlugin,
@@ -137,7 +138,7 @@ export const appJwt = (
     signature = signer.sign(privateKey)
   } catch (error) {
     throw new PluginError(
-      `The private key cannot sign: ${error instanceof Error ? error.message : String(error)}`,
+      `The private key cannot sign: ${messageOf(error)}`,
       400
     )
   }

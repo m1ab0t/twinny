@@ -16,6 +16,7 @@
 import fs from "node:fs"
 import path from "node:path"
 
+import { messageOf } from "../../common/errors"
 import { isRecord } from "../../common/guards"
 import type { GatewayLog } from "../log"
 import { writePrivateJson } from "../private-file"
@@ -153,7 +154,7 @@ const parsePluginsFile = (text: string, file: string): PluginsFile => {
     parsed = JSON.parse(text)
   } catch (error) {
     throw new Error(
-      `${file} is not valid JSON: ${error instanceof Error ? error.message : String(error)}`
+      `${file} is not valid JSON: ${messageOf(error)}`
     )
   }
   if (
@@ -254,7 +255,7 @@ export class PluginHost {
 
   constructor(private readonly _options: PluginHostOptions) {
     this.events = new PluginEventBus(_options.now ?? Date.now, (error) =>
-      _options.log.error({ event: "plugin.event-handler-failed", message: error instanceof Error ? error.message : String(error) })
+      _options.log.error({ event: "plugin.event-handler-failed", message: messageOf(error) })
     )
     for (const plugin of _options.plugins) {
       if (!PLUGIN_ID_PATTERN.test(plugin.id))
@@ -349,13 +350,13 @@ export class PluginHost {
       this._options.log.error({
         event: "plugin.failed",
         reason: id,
-        message: error instanceof Error ? error.message : String(error)
+        message: messageOf(error)
       })
       return {
         status: 500,
         body: {
           error: {
-            message: error instanceof Error ? error.message : String(error)
+            message: messageOf(error)
           }
         }
       }
@@ -373,8 +374,8 @@ export class PluginHost {
       return await instance.handlePublic(request)
     } catch (error) {
       if (error instanceof PluginError) return { status: error.status, body: { error: { message: error.message } } }
-      this._options.log.error({ event: "plugin.failed", reason: id, message: error instanceof Error ? error.message : String(error) })
-      return { status: 500, body: { error: { message: error instanceof Error ? error.message : String(error) } } }
+      this._options.log.error({ event: "plugin.failed", reason: id, message: messageOf(error) })
+      return { status: 500, body: { error: { message: messageOf(error) } } }
     }
   }
 

@@ -15,6 +15,7 @@
 import fs from "node:fs"
 import path from "node:path"
 
+import { messageOf } from "../../../common/errors"
 import { isRecord } from "../../../common/guards"
 import { writePrivateFile, writePrivateJson } from "../../private-file"
 import {
@@ -327,7 +328,7 @@ export class BackupsPlugin implements PluginInstance {
         })
       } catch (error) {
         run.ok = false
-        run.error = error instanceof Error ? error.message : String(error)
+        run.error = messageOf(error)
         this._context.log.warn({ event: "plugin.backup-failed", key: requestedBy, message: run.error })
         this._context.events?.emit({
           type: "backup.failed",
@@ -366,7 +367,7 @@ export class BackupsPlugin implements PluginInstance {
       this._archivesError = undefined
     } catch (error) {
       this._archives = []
-      this._archivesError = error instanceof Error ? error.message : String(error)
+      this._archivesError = messageOf(error)
     }
     this._archivesAt = new Date(this._context.now()).toISOString()
     return this._archives

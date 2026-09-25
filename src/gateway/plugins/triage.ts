@@ -6,6 +6,7 @@
  */
 import fs from "node:fs"
 
+import { messageOf } from "../../common/errors"
 import { isRecord } from "../../common/guards"
 import type { ChatMessage } from "../../extension/inference/types"
 import { writePrivateJson } from "../private-file"
@@ -248,7 +249,7 @@ export class Triager {
         labels: [],
         reply: "",
         text: "",
-        error: error instanceof Error ? error.message : String(error)
+        error: messageOf(error)
       }
       this._store.put(record)
       return record
