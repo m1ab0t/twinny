@@ -23,6 +23,8 @@ import fs from "node:fs"
 import path from "node:path"
 
 import { noAnswer, timeoutSignal } from "../../common/deadline"
+import { isRecord } from "../../common/guards"
+import { writePrivateJson } from "../private-file"
 
 import {
   json,
@@ -229,9 +231,6 @@ interface ReposFile {
   settings: Record<string, unknown>
 }
 
-const isRecord = (value: unknown): value is Record<string, unknown> =>
-  typeof value === "object" && value !== null && !Array.isArray(value)
-
 const parseReposFile = (text: string, file: string): ReposFile => {
   let parsed: unknown
   try {
@@ -364,17 +363,12 @@ export class RepoStore {
   }
 
   private save(): void {
-    fs.mkdirSync(path.dirname(this.file), { recursive: true, mode: 0o700 })
     const content: ReposFile = {
       version: 1,
       repos: this._repos,
       settings: this._settings
     }
-    const tmp = `${this.file}.${process.pid}.tmp`
-    fs.writeFileSync(tmp, `${JSON.stringify(content, null, 2)}\n`, {
-      mode: 0o600
-    })
-    fs.renameSync(tmp, this.file)
+    writePrivateJson(this.file, content)
   }
 }
 
